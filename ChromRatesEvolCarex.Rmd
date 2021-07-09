@@ -1,0 +1,104 @@
+---
+title: "ChromRatesEvolCarex"
+author: "Marcial Escudero"
+date: "7/8/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+Setting up the data set
+
+```{r}
+PPAbio <- read.csv("PPAbio.csv")
+PPAbio <- PPAbio[,2:6]
+colnames(PPAbio) <- c("species", "B1", "B4", "B7", "B12")
+PPAbio
+
+PPAculm <- read.csv("PPAculm.csv")
+PPAculm <- PPAculm[,2:3]
+colnames(PPAculm) <- c("species", "CU")
+PPAculm
+
+PPALateralInfl <- read.csv("PPALateralInfl.csv")
+PPALateralInfl <- PPALateralInfl[,2:3]
+colnames(PPALateralInfl) <- c("species", "LI")
+PPALateralInfl
+
+PPAdiv2n <- read.csv("PPAdiv2n.csv")
+PPAdiv2n <- PPAdiv2n[,2:6]
+colnames(PPAdiv2n) <- c("species", "SP", "EX", "DI", "c2n")
+PPAdiv2n
+
+
+PPAmorph <- merge(PPAculm, PPALateralInfl, by.x = "species", by.y= "species", all = T)
+PPAmorph
+
+dim(PPAculm)
+dim(PPALateralInfl)
+dim(PPAmorph)
+
+PPAmorphbio <- merge(PPAmorph, PPAbio, by.x = "species", by.y= "species", all = T)
+dim(PPAmorphbio)
+
+PPAdata <- merge(PPAmorphbio, PPAdiv2n, by.x = "species", by.y= "species", all = T)
+dim(PPAdata)
+
+
+```
+
+Starting analyses with phylopath
+
+```{r}
+
+library(ape)
+my_tree <- read.tree('Carex2n.tree') # For Newick format trees
+
+my_data <- PPAdata
+rownames(my_data) <- my_data$species
+
+#my_tree$tip.label # Check the tip labels of your tree
+#rownames(my_data) <- gsub(' ', '_', my_data$species_name_with_spaces)
+
+library(phylopath)
+
+models <- define_model_set(
+  null = c(),
+  direct  = c(DI ~ c2n),
+  indirectmorph = c(CU ~ c2n,LI ~ c2n),
+  bothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n),
+  biodirect  = c(DI ~ c2n, c2n ~ B4),
+  bioindirectmorph = c(CU ~ c2n ,  LI ~ c2n, c2n ~ B4),
+  biobothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n, c2n ~ B4),
+  .common = c(DI ~ B4, DI ~ CU + LI)
+)
+
+
+models$direct
+
+plot(models$direct)
+
+plot_model_set(models)
+
+result <- phylo_path(models, data = my_data, tree = my_tree, model = 'lambda', na.rm = TRUE)
+
+result
+
+(s <- summary(result))
+
+plot(s)
+
+(best_model <- best(result))
+
+
+plot(best_model)
+
+average_model <- average(result)
+average_model
+plot(average_model, algorithm = 'mds', curvature = 0.1) # increase the curvature to avoid overlapping edges
+
+average_model_full <- average(result, avg_method = "full")
+plot(average_model_full, algorithm = 'mds', curvature = 0.1)
+
+```
+
