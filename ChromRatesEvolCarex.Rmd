@@ -100,5 +100,52 @@ plot(average_model, algorithm = 'mds', curvature = 0.1) # increase the curvature
 average_model_full <- average(result, avg_method = "full")
 plot(average_model_full, algorithm = 'mds', curvature = 0.1)
 
+
+
+models2 <- define_model_set(
+  null = c(),
+  nmdirect  = c(DI ~ c2n),
+  nmindirectmorph = c(CU ~ c2n,LI ~ c2n),
+  nmbothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n),
+  nmbiodirect  = c(DI ~ c2n, c2n ~ B4),
+  nmbioindirectmorph = c(CU ~ c2n ,  LI ~ c2n, c2n ~ B4),
+  nmbiobothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n, c2n ~ B4),
+  direct  = c(DI ~ c2n,DI ~ CU + LI),
+  indirectmorph = c(CU ~ c2n,LI ~ c2n,DI ~ CU + LI),
+  bothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n,DI ~ CU + LI),
+  biodirect  = c(DI ~ c2n, c2n ~ B4,DI ~ CU + LI),
+  bioindirectmorph = c(CU ~ c2n ,  LI ~ c2n, c2n ~ B4,DI ~ CU + LI),
+  biobothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n, c2n ~ B4,DI ~ CU + LI),
+  .common = c(DI ~ B4)
+  
+)
+
+
+models2$direct
+
+plot(models2$direct)
+
+plot_model_set(models2)
+
+result2 <- phylo_path(models2, data = my_data, tree = my_tree, model = 'lambda', na.rm = TRUE)
+
+result2
+
+(s2 <- summary(result2))
+
+plot(s2)
+
+(best_model2 <- best(result2))
+
+
+plot(best_model2)
+
+average_model2 <- average(result2)
+average_model2
+plot(average_model2, algorithm = 'mds', curvature = 0.2) # increase the curvature to avoid overlapping edges
+
+average_model_full2 <- average(result2, avg_method = "full")
+plot(average_model_full2, algorithm = 'mds', curvature = 0.2)
+
 ```
 
