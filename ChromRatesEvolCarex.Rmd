@@ -149,3 +149,53 @@ plot(average_model_full2, algorithm = 'mds', curvature = 0.2)
 
 ```
 
+Let's create shuffle trees for the permutation analyses
+
+```{r}
+
+library(picante)
+my_tree
+
+my_trees <- list()
+
+for (i in 1:100) my_trees[[i]] <- tipShuffle(my_tree)
+
+my_trees
+
+for (i in 1:100) write.tree(my_trees[[i]], paste0("./trees/my_tree", paste(i), ".tree"))
+
+```
+
+
+Let's get the matrices
+
+```{r}
+
+branchmatrix <- read.csv(file= "branch_matrix.csv")
+branchmatrix
+colnames(branchmatrix) <- c("div", "spe", "ext", "r2n")
+
+branchmatrixsim <- matrix(0, 1508, 100)
+for (i in 1:100) branchmatrixsim[,i] <- read.csv(paste0("./branchmatrix/branch_matrix", paste(i), ".csv"))[,2]
+
+branchmatrixdef <- cbind(branchmatrix,branchmatrixsim)
+dim(branchmatrixdef)
+
+results <- list()
+for (i in 5:105) results[[i-4]] <- summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,i]))
+
+pvalues <- vector()
+for (i in 1:100) pvalues[i] <- results[[i]]$coefficients[2,4]
+pvalues
+
+rsquareds <- vector()
+for (i in 1:100) rsquareds[i] <- results[[i]]$r.squared
+rsquareds
+
+sort(pvalues)
+summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,4]))$coefficients[2,4]
+sort(rsquareds)
+summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,4]))$r.squared
+
+```
+
