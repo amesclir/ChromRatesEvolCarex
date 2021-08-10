@@ -12,22 +12,22 @@ Setting up the data set
 ```{r}
 PPAbio <- read.csv("PPAbio.csv")
 PPAbio <- PPAbio[,2:6]
-colnames(PPAbio) <- c("species", "B1", "B4", "B7", "B12")
+colnames(PPAbio) <- c("species", "RB1", "RB4", "RB7", "RB12")
 PPAbio
 
 PPAculm <- read.csv("PPAculm.csv")
 PPAculm <- PPAculm[,2:3]
-colnames(PPAculm) <- c("species", "CU")
+colnames(PPAculm) <- c("species", "RCU")
 PPAculm
 
 PPALateralInfl <- read.csv("PPALateralInfl.csv")
 PPALateralInfl <- PPALateralInfl[,2:3]
-colnames(PPALateralInfl) <- c("species", "LI")
+colnames(PPALateralInfl) <- c("species", "RLI")
 PPALateralInfl
 
 PPAdiv2n <- read.csv("PPAdiv2n.csv")
 PPAdiv2n <- PPAdiv2n[,2:6]
-colnames(PPAdiv2n) <- c("species", "SP", "EX", "DI", "c2n")
+colnames(PPAdiv2n) <- c("species", "SP", "EX", "DI", "R2n")
 PPAdiv2n
 
 
@@ -64,13 +64,40 @@ library(phylopath)
 
 models <- define_model_set(
   null = c(),
-  direct  = c(DI ~ c2n),
-  indirectmorph = c(CU ~ c2n,LI ~ c2n),
-  bothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n),
-  biodirect  = c(DI ~ c2n, c2n ~ B4),
-  bioindirectmorph = c(CU ~ c2n ,  LI ~ c2n, c2n ~ B4),
-  biobothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n, c2n ~ B4),
-  .common = c(DI ~ B4, DI ~ CU + LI)
+  
+   #only rates, no direct effect of morphological rates on diversification, direct effect of bio on diversification
+  nmdirect  = c(DI ~ R2n, DI ~ RB4),
+  nmindirectmorph = c(RCU ~ R2n,RLI ~ R2n, DI ~ RB4),
+  nmbothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, DI ~ RB4),
+  nmbiodirect  = c(DI ~ R2n, R2n ~ RB4, DI ~ RB4),
+  nmbioindirectmorph = c(RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4, DI ~ RB4),
+  nmbiobothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4, DI ~ RB4),
+  
+  #only rates, direct effect of morphological rates on diversification, direct effect of bio on diversification
+  direct  = c(DI ~ R2n,DI ~ RCU + RLI, DI ~ RB4),
+  indirectmorph = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI, DI ~ RB4),
+  bothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI, DI ~ RB4),
+  biodirect  = c(DI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4),
+  bioindirectmorph = c(RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4),
+  biobothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4),
+  
+  #only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification
+  nbnmdirect  = c(DI ~ R2n),
+  nbnmindirectmorph = c(RCU ~ R2n,RLI ~ R2n),
+  nbnmbothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  nbnmbiodirect  = c(DI ~ R2n, R2n ~ RB4),
+  nbnmbioindirectmorph = c(RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4),
+  nbnmbiobothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4),
+  
+  #only rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification
+  nbdirect  = c(DI ~ R2n,DI ~ RCU + RLI),
+  nbindirectmorph = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI),
+  nbbothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  nbbiodirect  = c(DI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI),
+  nbbioindirectmorph = c(RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI),
+  nbbiobothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI),
+  
+  .common = c()
 )
 
 
@@ -98,56 +125,315 @@ average_model
 plot(average_model, algorithm = 'mds', curvature = 0.1) # increase the curvature to avoid overlapping edges
 
 average_model_full <- average(result, avg_method = "full")
+average_model_full
 plot(average_model_full, algorithm = 'mds', curvature = 0.1)
 
 
 
-models2 <- define_model_set(
+
+
+```
+
+
+Let's make the models onky with the variables, no rates!
+
+```{r}
+culm <- read.csv("./traits/data_culm.csv", sep = ";")
+LateralInfl <- read.csv("./traits/data_LateralInfl.csv", sep = ";")
+chr2n <- read.csv("./traits/data_2n.csv", sep = "")
+bio1 <- read.csv("./traits/data_bio1.csv", sep = ";")
+bio4 <- read.csv("./traits/data_bio4.csv", sep = ";")
+bio7 <- read.csv("./traits/data_bio7.csv", sep = ";")
+bio12 <- read.csv("./traits/data_bio12.csv", sep = ";")
+
+morph <- merge(culm, LateralInfl, by.x = "original.name", by.y= "original.name", all = T)
+morph
+bio14 <- merge(bio1, bio4, by.x = "original.name", by.y= "original.name", all = T)
+bio147 <- merge(bio14, bio7, by.x = "original.name", by.y= "original.name", all = T)
+bio <- merge(bio147, bio12, by.x = "original.name", by.y= "original.name", all = T)
+
+morphbio <- merge(morph, bio, by.x = "original.name", by.y= "original.name", all = T)
+
+data <- merge(morphbio, chr2n, by.x = "original.name", by.y= "original.name", all = T)
+dim(data)
+
+names(PPAdata) <- c("species", "RCU", "RLI", "RB1", "RB4", "RB7", "RB12", "SP", "EX", "DI", "R2n") 
+names(data) <- c("species", "CU", "LI", "B1", "B4", "B7","B12",  "C2n")
+PPAdata <- merge(PPAdata, data, by.x = "species", by.y= "species", all = T)
+names(PPAdata)
+
+write.csv(PPAdata, file="PPAdata.csv")
+plot(PPAdata$R2n ~ PPAdata$C2n)
+summary(lm(PPAdata$R2n ~ PPAdata$C2n))
+
+
+library(ape)
+my_tree <- read.tree('Carex2n.tree') # For Newick format trees
+
+my_data2 <- PPAdata
+rownames(my_data2) <- my_data2$species
+
+#my_tree$tip.label # Check the tip labels of your tree
+#rownames(my_data) <- gsub(' ', '_', my_data$species_name_with_spaces)
+
+library(phylopath)
+
+modelsnorates <- define_model_set(
   null = c(),
-  nmdirect  = c(DI ~ c2n),
-  nmindirectmorph = c(CU ~ c2n,LI ~ c2n),
-  nmbothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n),
-  nmbiodirect  = c(DI ~ c2n, c2n ~ B4),
-  nmbioindirectmorph = c(CU ~ c2n ,  LI ~ c2n, c2n ~ B4),
-  nmbiobothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n, c2n ~ B4),
-  direct  = c(DI ~ c2n,DI ~ CU + LI),
-  indirectmorph = c(CU ~ c2n,LI ~ c2n,DI ~ CU + LI),
-  bothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n,DI ~ CU + LI),
-  biodirect  = c(DI ~ c2n, c2n ~ B4,DI ~ CU + LI),
-  bioindirectmorph = c(CU ~ c2n ,  LI ~ c2n, c2n ~ B4,DI ~ CU + LI),
-  biobothmorph = c(DI ~ c2n, CU ~ c2n ,  LI ~ c2n, c2n ~ B4,DI ~ CU + LI),
-  .common = c(DI ~ B4)
+  #no rates, no direct effect of morphology on diversification, direct effect of bio on diversification
+  nmdirectnorates  = c(DI ~ C2n, DI ~ B1 + B4 + B7 + B12),
+  nmindirectmorphnorates = c(CU ~ C2n,LI ~ C2n, DI ~ B1 + B4 + B7 + B12),
+  nmbothmorphnorates = c(DI ~ C2n, CU ~ C2n,  LI ~ C2n, DI ~ B1 + B4 + B7 + B12),
+  nmbiodirectnorates  = c(DI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ B1 + B4 + B7 + B12),
+  nmbioindirectmorphnorates = c(CU ~ C2n,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ B1 + B4 + B7 + B12),
+  nmbiobothmorphnorates = c(DI ~ C2n , CU ~ C2n ,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ B1 + B4 + B7 + B12),
+  
+  #no rates, direct effect of morphology on diversification, direct effect of bio on diversification
+  directnorates  = c(DI ~ C2n, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+  indirectmorphnorates = c(CU ~ C2n,LI ~ C2n,DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+  bothmorphnorates = c(DI ~ C2n, CU ~ C2n ,  LI ~ C2n, DI ~  CU + LI, DI ~ B1 + B4 + B7 + B12),
+  biodirectnorates  = c(DI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+  bioindirectmorphnorates = c(CU ~C2n,  LI ~C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+  biobothmorphnorates = c(DI ~ C2n, CU ~ C2n ,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+
+  #no rates, no direct effect of morphology on diversification, no direct effect of bio on diversification
+  nbnmdirectnorates  = c(DI ~ C2n),
+  nbnmindirectmorphnorates = c(CU ~ C2n,LI ~ C2n),
+  nbnmbothmorphnorates = c(DI ~ C2n, CU ~ C2n,  LI ~ C2n),
+  nbnmbiodirectnorates  = c(DI ~ C2n, C2n ~ B1 + B4 + B7 + B12),
+  nbnmbioindirectmorphnorates = c(CU ~ C2n,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12),
+  nbnmbiobothmorphnorates = c(DI ~ C2n , CU ~ C2n ,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12),
+  
+  #no rates, direct effect of morphology on diversification, no direct effect of bio on diversification
+  nbdirectnorates  = c(DI ~ C2n, DI ~ CU + LI),
+  nbindirectmorphnorates = c(CU ~ C2n,LI ~ C2n,DI ~ CU + LI),
+  nbbothmorphnorates = c(DI ~ C2n, CU ~ C2n ,  LI ~ C2n, DI ~  CU + LI),
+  nbbiodirectnorates  = c(DI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI),
+  nbbioindirectmorphnorates = c(CU ~C2n,  LI ~C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI),
+  nbbiobothmorphnorates = c(DI ~ C2n, CU ~ C2n ,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI),
+
+  .common = c()
   
 )
 
+modelsnorates$directnorates
 
-models2$direct
+plot(modelsnorates$directnorates)
 
-plot(models2$direct)
+plot_model_set(modelsnorates)
 
-plot_model_set(models2)
+resultnorates <- phylo_path(modelsnorates, data = my_data2, tree = my_tree, model = 'lambda', na.rm = TRUE)
 
-result2 <- phylo_path(models2, data = my_data, tree = my_tree, model = 'lambda', na.rm = TRUE)
+resultnorates
 
-result2
+(snorates <- summary(resultnorates))
+plot(snorates)
 
-(s2 <- summary(result2))
-
-plot(s2)
-
-(best_model2 <- best(result2))
+(best_modelnorates <- best(resultnorates))
 
 
-plot(best_model2)
+plot(best_modelnorates)
 
-average_model2 <- average(result2)
-average_model2
-plot(average_model2, algorithm = 'mds', curvature = 0.2) # increase the curvature to avoid overlapping edges
+average_modelnorates <- average(resultnorates)
+average_modelnorates
+plot(average_modelnorates, algorithm = 'mds', curvature = 0.2) # increase the curvature to avoid overlapping edges
 
-average_model_full2 <- average(result2, avg_method = "full")
-plot(average_model_full2, algorithm = 'mds', curvature = 0.2)
+average_model_fullnorates <- average(resultnorates, avg_method = "full")
+average_model_fullnorates
+plot(average_model_fullnorates, algorithm = 'mds', curvature = 0.2)
+
+
+#We are going to repeat the process but excluding Spiros from NZ
+my_data3 <- PPAdata
+rownames(my_data3) <- my_data3$species
+my_data3$DI[my_data3$DI > 3.5] <- NA
+
+plot(my_data2$DI ~ my_data2$C2n)
+summary(lm(my_data2$DI ~ my_data2$C2n))
+plot(my_data3$DI ~ my_data3$C2n)
+summary(lm(my_data3$DI ~ my_data3$C2n))
+
+resultnorates2 <- phylo_path(modelsnorates, data = my_data3, tree = my_tree, model = 'lambda', na.rm = TRUE)
+
+resultnorates2
+
+(snorates2 <- summary(resultnorates2))
+plot(snorates2)
+
+(best_modelnorates2 <- best(resultnorates2))
+
+
+plot(best_modelnorates2)
+
+average_modelnorates2 <- average(resultnorates2)
+average_modelnorates2
+plot(average_modelnorates2, algorithm = 'mds', curvature = 0.2) # increase the curvature to avoid overlapping edges
+
+average_model_fullnorates2 <- average(resultnorates2, avg_method = "full")
+average_model_fullnorates2
+plot(average_model_fullnorates2, algorithm = 'mds', curvature = 0.2)
+
+library(caper)
+comparative.data1 <- comparative.data(my_tree, my_data2[,c(1,10,18)], species, vcv=TRUE, vcv.dim=3)
+comparative.data1
+mod1 <- pgls(DI ~ C2n, comparative.data1, lambda='ML')
+summary(mod1)
+
+comparative.data2 <- comparative.data(my_tree, my_data3[,c(1,10,18)], species, vcv=TRUE, vcv.dim=3)
+comparative.data2
+mod2 <- pgls(DI ~ C2n, comparative.data2, lambda='ML')
+summary(mod2)
 
 ```
+
+
+Let´s make more complex models with chromosome numbers and bios and morphological variables and rates
+
+```{r}
+
+
+
+models3 <- define_model_set(
+  null = c(),
+  
+  #only rates, no direct effect of morphological rates on diversification, direct effect of bio on diversification
+  nmdirect  = c(DI ~ R2n, DI ~ RB4),
+  nmindirectmorph = c(RCU ~ R2n,RLI ~ R2n, DI ~ RB4),
+  nmbothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, DI ~ RB4),
+  nmbiodirect  = c(DI ~ R2n, R2n ~ RB4, DI ~ RB4),
+  nmbioindirectmorph = c(RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4, DI ~ RB4),
+  nmbiobothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4, DI ~ RB4),
+  
+  #only rates, direct effect of morphological rates on diversification, direct effect of bio on diversification
+  direct  = c(DI ~ R2n,DI ~ RCU + RLI, DI ~ RB4),
+  indirectmorph = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI, DI ~ RB4),
+  bothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI, DI ~ RB4),
+  biodirect  = c(DI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4),
+  bioindirectmorph = c(RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4),
+  biobothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4),
+  
+  #only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification
+  nbnmdirect  = c(DI ~ R2n),
+  nbnmindirectmorph = c(RCU ~ R2n,RLI ~ R2n),
+  nbnmbothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  nbnmbiodirect  = c(DI ~ R2n, R2n ~ RB4),
+  nbnmbioindirectmorph = c(RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4),
+  nbnmbiobothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4),
+  
+  #only rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification
+  nbdirect  = c(DI ~ R2n,DI ~ RCU + RLI),
+  nbindirectmorph = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI),
+  nbbothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  nbbiodirect  = c(DI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI),
+  nbbioindirectmorph = c(RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI),
+  nbbiobothmorph = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n, R2n ~ RB4,DI ~ RCU + RLI),
+  
+  
+  #no rates, no direct effect of morphology on diversification, direct effect of bio on diversification
+  nmdirectnorates  = c(DI ~ C2n, DI ~ B1 + B4 + B7 + B12),
+  nmindirectmorphnorates = c(CU ~ C2n,LI ~ C2n, DI ~ B1 + B4 + B7 + B12),
+  nmbothmorphnorates = c(DI ~ C2n, CU ~ C2n,  LI ~ C2n, DI ~ B1 + B4 + B7 + B12),
+  nmbiodirectnorates  = c(DI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ B1 + B4 + B7 + B12),
+  nmbioindirectmorphnorates = c(CU ~ C2n,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ B1 + B4 + B7 + B12),
+  nmbiobothmorphnorates = c(DI ~ C2n , CU ~ C2n ,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ B1 + B4 + B7 + B12),
+  
+  #no rates, direct effect of morphology on diversification, direct effect of bio on diversification
+  directnorates  = c(DI ~ C2n, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+  indirectmorphnorates = c(CU ~ C2n,LI ~ C2n,DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+  bothmorphnorates = c(DI ~ C2n, CU ~ C2n ,  LI ~ C2n, DI ~  CU + LI, DI ~ B1 + B4 + B7 + B12),
+  biodirectnorates  = c(DI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+  bioindirectmorphnorates = c(CU ~C2n,  LI ~C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+  biobothmorphnorates = c(DI ~ C2n, CU ~ C2n ,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12),
+
+  #no rates, no direct effect of morphology on diversification, no direct effect of bio on diversification
+  nbnmdirectnorates  = c(DI ~ C2n),
+  nbnmindirectmorphnorates = c(CU ~ C2n,LI ~ C2n),
+  nbnmbothmorphnorates = c(DI ~ C2n, CU ~ C2n,  LI ~ C2n),
+  nbnmbiodirectnorates  = c(DI ~ C2n, C2n ~ B1 + B4 + B7 + B12),
+  nbnmbioindirectmorphnorates = c(CU ~ C2n,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12),
+  nbnmbiobothmorphnorates = c(DI ~ C2n , CU ~ C2n ,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12),
+  
+  #no rates, direct effect of morphology on diversification, no direct effect of bio on diversification
+  nbdirectnorates  = c(DI ~ C2n, DI ~ CU + LI),
+  nbindirectmorphnorates = c(CU ~ C2n,LI ~ C2n,DI ~ CU + LI),
+  nbbothmorphnorates = c(DI ~ C2n, CU ~ C2n ,  LI ~ C2n, DI ~  CU + LI),
+  nbbiodirectnorates  = c(DI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI),
+  nbbioindirectmorphnorates = c(CU ~C2n,  LI ~C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI),
+  nbbiobothmorphnorates = c(DI ~ C2n, CU ~ C2n ,  LI ~ C2n, C2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI),
+  
+
+  #both rates, no direct effect of morphological rates on diversification, direct effect of bio on diversification
+  nmdirect2  = c(DI ~ R2n + C2n, DI ~ RB4 + B1 + B4 + B7 + B12),
+  nmindirectmorph2 = c(RCU ~ R2n + C2n, RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, DI ~ RB4 + B1 + B4 + B7 + B12),
+  nmbothmorph2 = c(DI ~ R2n + C2n, RCU ~ R2n  + C2n,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, DI ~ RB4 + B1 + B4 + B7 + B12),
+  nmbiodirect2  = c(DI ~ R2n + C2n, R2n ~ RB4 + B1 + B4 + B7 + B12, C2n ~ RB4 + B1 + B4 + B7 + B12, DI ~ RB4 + B1 + B4 + B7 + B12),
+  nmbioindirectmorph2 = c(RCU ~ R2n  + C2n,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, R2n ~ RB4 + B1 + B4 + B7 + B12, C2n ~ RB4 + B1 + B4 + B7 + B12, DI ~ RB4 + B1 + B4 + B7 + B12),
+  nmbiobothmorph2 = c(DI ~ R2n + C2n , RCU ~ R2n + C2n ,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, R2n ~ RB4 + B1 + B4 + B7 + B12, C2n ~ RB4 + B1 + B4 + B7 + B12, DI ~ RB4 + B1 + B4 + B7 + B12),
+  
+  #both rates, direct effect of morphological rates on diversification, direct effect of bio on diversification
+  direct2  = c(DI ~ R2n + C2n, DI ~ RCU + RLI + CU + LI, DI ~ RB4 + B1 + B4 + B7 + B12),
+  indirectmorph2 = c(RCU ~ R2n + C2n, RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, DI ~ RCU + RLI + CU + LI, DI ~ RB4 + B1 + B4 + B7 + B12),
+  bothmorph2 = c(DI ~ R2n  + C2n, RCU ~ R2n + C2n ,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, DI ~ RCU + RLI + CU + LI, DI ~ RB4 + B1 + B4 + B7 + B12),
+  biodirect2  = c(DI ~ R2n   + C2n, R2n ~ RB4  + B1 + B4 + B7 + B12, C2n ~ RB4  + B1 + B4 + B7 + B12, DI ~ RCU + RLI + CU + LI, DI ~ RB4 + B1 + B4 + B7 + B12),
+  bioindirectmorph2 = c(RCU ~ R2n + C2n,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, R2n ~ RB4+ B1 + B4 + B7 + B12, C2n ~ RB4 + B1 + B4 + B7 + B12, DI ~ RCU + RLI + CU + LI, DI ~ RB4 + B1 + B4 + B7 + B12),
+  biobothmorph2 = c(DI ~ R2n + C2n, RCU ~ R2n + C2n ,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, R2n ~ RB4 + B1 + B4 + B7 + B12, C2n ~ RB4+ B1 + B4 + B7 + B12, DI ~ RCU + RLI + CU + LI, DI ~ RB4 + B1 + B4 + B7 + B12),
+
+  #both rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification
+  nbnmdirect2  = c(DI ~ R2n + C2n),
+  nbnmindirectmorph2 = c(RCU ~ R2n + C2n, RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n),
+  nbnmbothmorph2 = c(DI ~ R2n + C2n, RCU ~ R2n  + C2n,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n),
+  nbnmbiodirect2  = c(DI ~ R2n + C2n, R2n ~ RB4 + B1 + B4 + B7 + B12, C2n ~ RB4 + B1 + B4 + B7 + B12),
+  nbnmbioindirectmorph2 = c(RCU ~ R2n  + C2n,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, R2n ~ RB4 + B1 + B4 + B7 + B12, C2n ~ RB4 + B1 + B4 + B7 + B12),
+  nbnmbiobothmorph2 = c(DI ~ R2n + C2n , RCU ~ R2n + C2n ,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, R2n ~ RB4 + B1 + B4 + B7 + B12, C2n ~ RB4 + B1 + B4 + B7 + B12),
+  
+  #both rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification
+  nbdirect2  = c(DI ~ R2n + C2n, DI ~ RCU + RLI + CU + LI),
+  nbindirectmorph2 = c(RCU ~ R2n + C2n, RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, DI ~ RCU + RLI + CU + LI),
+  nbbothmorph2 = c(DI ~ R2n  + C2n, RCU ~ R2n + C2n ,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, DI ~ RCU + RLI + CU + LI),
+  nbbiodirect2  = c(DI ~ R2n   + C2n, R2n ~ RB4  + B1 + B4 + B7 + B12, C2n ~ RB4  + B1 + B4 + B7 + B12, DI ~ RCU + RLI + CU + LI),
+  nbbioindirectmorph2 = c(RCU ~ R2n + C2n,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, R2n ~ RB4+ B1 + B4 + B7 + B12, C2n ~ RB4 + B1 + B4 + B7 + B12, DI ~ RCU + RLI + CU + LI),
+  nbbiobothmorph2 = c(DI ~ R2n + C2n, RCU ~ R2n + C2n ,  RLI ~ R2n + C2n, CU ~ R2n + C2n, LI ~ R2n + C2n, R2n ~ RB4 + B1 + B4 + B7 + B12, C2n ~ RB4+ B1 + B4 + B7 + B12, DI ~ RCU + RLI + CU + LI),
+  
+  .common = c()
+  
+  )
+
+
+
+
+models3$direct
+
+plot(models3$direct)
+
+plot_model_set(models3)
+
+result3 <- phylo_path(models3, data = my_data2, tree = my_tree, model = 'lambda', na.rm = TRUE)
+
+result3
+
+(s3 <- summary(result3))
+plot(s3)
+
+(best_model3 <- best(result3))
+
+
+plot(best_model3)
+
+average_model3 <- average(result3)
+average_model3
+plot(average_model3, algorithm = 'mds', curvature = 0.2) # increase the curvature to avoid overlapping edges
+
+average_model_full3 <- average(result3, avg_method = "full")
+average_model_full3
+plot(average_model_full3, algorithm = 'mds', curvature = 0.2)
+
+
+
+
+
+```
+
+
 
 Let's create shuffle trees for the permutation analyses
 
