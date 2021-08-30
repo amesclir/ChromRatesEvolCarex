@@ -3,7 +3,7 @@
 #$ -wd /home/aescudero/R/run1/
 #$ -o R_run1.salida
 #$ -e R_run1.err
-#$ -q diaria_simple
+#$ -q media_simple
 module load R-3.4.2-Bioconductor
 export LD_LIBRARY_PATH=/home/software/libraries/fftw-3.3.8-2/lib:$LD_LIBRARY_PATH
 R CMD BATCH script1.R

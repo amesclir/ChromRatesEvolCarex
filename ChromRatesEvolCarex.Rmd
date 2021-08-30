@@ -485,3 +485,30 @@ summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,4]))$r.squared
 
 ```
 
+
+Plotting Quasse results
+
+```{r}
+load("./run1/.RData")
+    #printing results. Best model OU.hump.sigmoid, so hump speciation and sigmoid extinction
+    states.seq <- seq(min(states),max(states)) #Create a vector for the range of states
+    chrom.mle.d.h.s #Look for the $par values, that are fully explained in $par.full
+    #Those parameters will make the functions
+
+ library(diversitree)
+
+    mu.s <- sigmoid.x(states.seq, chrom.mle.d.h.s$par[5],chrom.mle.d.h.s$par[6],chrom.mle.d.h.s$par[7],chrom.mle.d.h.s$par[8])
+    plot(states.seq, mu.s, type = "l")
+
+ 
+
+    lambda.h <- noroptimal.x(states.seq, chrom.mle.d.h.s$par[1], chrom.mle.d.h.s$par[2], chrom.mle.d.h.s$par[3], chrom.mle.d.h.s$par[4])
+    plot(states.seq, lambda.h, type = "l")
+
+ 
+
+    div <- lambda.h - mu.s
+    plot(states.seq, div, type = "l")
+    
+```
+
