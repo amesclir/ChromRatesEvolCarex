@@ -705,7 +705,151 @@ models3 <- define_model_set(
   d.r2n..d.mor..d.bio..mor.r2n..mor.bio = c(DI ~ R2n, CU ~ R2n ,  LI ~ R2n, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12, CU ~ B1 + B4 + B7 + B12,  LI ~ B1 + B4 + B7 + B12),
   d.r2n..d.mor..d.bio..r2n.bio..mor.bio  = c(DI ~ R2n, R2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12, CU ~ B1 + B4 + B7 + B12,  LI ~ B1 + B4 + B7 + B12),
   d.mor..d.bio..mor.r2n.bio..mor.bio = c(CU ~ R2n ,  LI ~ R2n, R2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12, CU ~ B1 + B4 + B7 + B12,  LI ~ B1 + B4 + B7 + B12),
-  d.r2n..d.mor..d.bio..mor.r2n.bio..mor.bio = c(DI ~ R2n, CU ~ R2n,  LI ~ R2n, R2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12, CU ~ B1 + B4 + B7 + B12,  LI ~ B1 + B4 + B7 + B12),    
+  d.r2n..d.mor..d.bio..mor.r2n.bio..mor.bio = c(DI ~ R2n, CU ~ R2n,  LI ~ R2n, R2n ~ B1 + B4 + B7 + B12, DI ~ CU + LI, DI ~ B1 + B4 + B7 + B12, CU ~ B1 + B4 + B7 + B12,  LI ~ B1 + B4 + B7 + B12),
+
+#Consider always C2n but not R2n
+#only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
+  #d.2n  = c(DI ~ C2n),
+  rmor.2n = c(RCU ~C2n,RLI ~C2n),
+  d.2n..rmor.2n = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n),
+  d.2n..2n.rbio  = c(DI ~C2n, C2n ~ RB4),
+  rmor.2n.rbio = c(RCU ~C2n ,  RLI ~C2n, C2n ~ RB4),
+  d.2n..rmor.2n.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, C2n ~ RB4),
+   
+#Consider always C2n but not R2n
+  #only rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.2n..d.rmor  = c(DI ~C2n,DI ~ RCU + RLI),
+  d.rmor..rmor.2n = c(RCU ~C2n,RLI ~C2n,DI ~ RCU + RLI),
+  d.2n..d.rmor..rmor.2n = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n,DI ~ RCU + RLI),
+  d.2n..d.rmor..2n.rbio  = c(DI ~C2n, C2n ~ RB4,DI ~ RCU + RLI),
+  d.rmor..rmor.2n.rbio = c(RCU ~C2n ,  RLI ~C2n, C2n ~ RB4,DI ~ RCU + RLI),
+  d.2n..d.rmor..rmor.2n.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, C2n ~ RB4,DI ~ RCU + RLI),
+  
+#Consider always C2n but not R2n
+   #only rates, no direct effect of morphological rates on diversification, direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.2n..d.rbio  = c(DI ~C2n, DI ~ RB4),
+  d.rbio..rmor.2n = c(RCU ~C2n,RLI ~C2n, DI ~ RB4),
+  d.2n..d.rbio..rmor.2n = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, DI ~ RB4),
+  d.2n..d.rbio..2n.rbio  = c(DI ~C2n, C2n ~ RB4, DI ~ RB4),
+  d.rbio..rmor.2n.rbio = c(RCU ~C2n ,  RLI ~C2n, C2n ~ RB4, DI ~ RB4),
+  d.2n..d.rbio..rmor.2n.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, C2n ~ RB4, DI ~ RB4),
+  
+#Consider always C2n but not R2n
+  #only rates, direct effect of morphological rates on diversification, direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.2n..d.rmor..d.rbio  = c(DI ~C2n,DI ~ RCU + RLI, DI ~ RB4),
+  d.rmor..d.rbio..rmor.2n = c(RCU ~C2n,RLI ~C2n,DI ~ RCU + RLI, DI ~ RB4),
+  d.2n..d.rmor..d.rbio..rmor.2n = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n,DI ~ RCU + RLI, DI ~ RB4),
+  d.2n..d.rmor..d.rbio..2n.rbio  = c(DI ~C2n, C2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4),
+  d.rmor..d.rbio..rmor.2n.rbio = c(RCU ~C2n ,  RLI ~C2n, C2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4),
+  d.2n..d.rmor..d.rbio..rmor.2n.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, C2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4),
+  
+#Consider always C2n but not R2n
+ #only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.2n..rmor.rbio  = c(DI ~C2n, RCU ~ RB4  ,  RLI ~ RB4),
+  rmor.2n..rmor.rbio = c(RCU ~C2n,RLI ~C2n, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..rmor.2n..rmor.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..2n.rbio..rmor.rbio  = c(DI ~C2n, C2n ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  rmor.2n.rbio..rmor.rbio = c(RCU ~C2n ,  RLI ~C2n, C2n ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..rmor.2n.rbio..rmor.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, C2n ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+   
+#Consider always C2n but not R2n
+  #only rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.2n..d.rmor..rmor.rbio  = c(DI ~C2n,DI ~ RCU + RLI, RCU ~ RB4  ,  RLI ~ RB4),
+  d.rmor..rmor.2n..rmor.rbio = c(RCU ~C2n,RLI ~C2n,DI ~ RCU + RLI, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..d.rmor..rmor.2n..rmor.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n,DI ~ RCU + RLI, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..d.rmor..2n.rbio..rmor.rbio  = c(DI ~C2n, C2n ~ RB4,DI ~ RCU + RLI, RCU ~ RB4  ,  RLI ~ RB4),
+  d.rmor..rmor.2n.rbio..rmor.rbio = c(RCU ~C2n ,  RLI ~C2n, C2n ~ RB4,DI ~ RCU + RLI, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..d.rmor..rmor.2n.rbio..rmor.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, C2n ~ RB4,DI ~ RCU + RLI, RCU ~ RB4  ,  RLI ~ RB4),
+  
+#Consider always C2n but not R2n
+   #only rates, no direct effect of morphological rates on diversification, direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.2n..d.rbio..rmor.rbio  = c(DI ~C2n, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.rbio..rmor.2n..rmor.rbio = c(RCU ~C2n,RLI ~C2n, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..d.rbio..rmor.2n..rmor.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..d.rbio..2n.rbio..rmor.rbio  = c(DI ~C2n, C2n ~ RB4, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.rbio..rmor.2n.rbio..rmor.rbio = c(RCU ~C2n ,  RLI ~C2n, C2n ~ RB4, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..d.rbio..rmor.2n.rbio..rmor.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, C2n ~ RB4, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  
+#Consider always C2n but not R2n
+  #only rates, direct effect of morphological rates on diversification, direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.2n..d.rmor..d.rbio..rmor.rbio  = c(DI ~C2n,DI ~ RCU + RLI, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.rmor..d.rbio..rmor.2n..rmor.rbio = c(RCU ~C2n,RLI ~C2n,DI ~ RCU + RLI, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..d.rmor..d.rbio..rmor.2n..rmor.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n,DI ~ RCU + RLI, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..d.rmor..d.rbio..2n.rbio..rmor.rbio  = c(DI ~C2n, C2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.rmor..d.rbio..rmor.2n.rbio..rmor.rbio = c(RCU ~C2n ,  RLI ~C2n, C2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4),
+  d.2n..d.rmor..d.rbio..rmor.2n.rbio..rmor.rbio = c(DI ~C2n, RCU ~C2n ,  RLI ~C2n, C2n ~ RB4,DI ~ RCU + RLI, DI ~ RB4, RCU ~ RB4  ,  RLI ~ RB4), 
+
+ #variables and rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
+  #d.b2n  = c(DI ~ C2n + R2n),
+  bmor.b2n = c(CU ~ C2n + R2n, RCU ~ C2n + R2n,LI ~ C2n + R2n, RLI ~ C2n + R2n),
+  d.b2n..bmor.b2n = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n),
+  d.b2n..b2n.bbio  = c(DI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12),
+  bmor.b2n.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..bmor.b2n.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12),
+   
+  
+  #variables and rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.b2n..d.bmor  = c(DI ~ C2n + R2n,DI ~ CU + RCU + LI + RLI),
+  d.bmor..bmor.b2n = c(CU ~ C2n + R2n, RCU ~ C2n + R2n,LI ~ C2n + R2n, RLI ~ C2n + R2n,DI ~ CU + RCU + LI + RLI),
+  d.b2n..d.bmor..bmor.b2n = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n,DI ~ CU + RCU + LI + RLI),
+  d.b2n..d.bmor..b2n.bio  = c(DI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ CU + RCU + LI + RLI),
+  d.bmor..bmor.b2n.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ CU + RCU + LI + RLI),
+  d.b2n..d.bmor..bmor.b2n.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12,DI ~ CU + RCU + LI + RLI),
+  
+ 
+   #variables and rates, no direct effect of morphological rates on diversification, direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.b2n..d.bbio  = c(DI ~ C2n + R2n, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bbio..bmor.b2n = c(CU ~ C2n + R2n, RCU ~ C2n + R2n,LI ~ C2n + R2n, RLI ~ C2n + R2n, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bbio..bmor.b2n = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bbio..b2n.bio  = c(DI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bbio..bmor.b2n.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bbio..bmor.b2n.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ B1 + B4 + RB4 + B7 + B12),
+  
+ 
+  #variables and rates, direct effect of morphological rates on diversification, direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.b2n..d.bmor..d.bio  = c(DI ~ C2n + R2n,DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bmor..d.bbio..bmor.b2n = c(CU ~ C2n + R2n, RCU ~ C2n + R2n,LI ~ C2n + R2n, RLI ~ C2n + R2n,DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bmor..d.bbio..bmor.b2n = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n,DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bmor..d.bbio..b2n.bio  = c(DI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12,DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bmor..d.bbio..bmor.b2n.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12,DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bmor..d.bbio..bmor.b2n.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12,DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12),
+
+  
+ #variables and rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.b2n..bmor.bio  = c(DI ~ C2n + R2n, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  bmor.b2n..bmor.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n,LI ~ C2n + R2n, RLI ~ C2n + R2n, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..bmor.b2n..bmor.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..b2n.bbio..bmor.bio  = c(DI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  bmor.b2n.bbio..bmor.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..bmor.b2n.bbio..bmor.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+ 
+
+  #variables and rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.b2n..d.bmor..bmor.bio  = c(DI ~ C2n + R2n,DI ~ CU + RCU + LI + RLI, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bmor..bmor.b2n..bmor.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n,LI ~ C2n + R2n, RLI ~ C2n + R2n,DI ~ CU + RCU + LI + RLI, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bmor..bmor.b2n..bmor.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n,  LI ~ C2n + R2n, RLI ~ C2n + R2n,DI ~ CU + RCU + LI + RLI, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bmor..b2n.bbio..bmor.bio  = c(DI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ CU + RCU + LI + RLI, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bmor..bmor.b2n.bbio..bmor.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12,DI ~ CU + RCU + LI + RLI, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bmor..bmor.b2n.bbio..bmor.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12,DI ~ CU + RCU + LI + RLI, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12, LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  
+
+   #variables and rates, no direct effect of morphological rates on diversification, direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.b2n..d.bbio..bmor.bio  = c(DI ~ C2n + R2n, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bbio..bmor.b2n..bmor.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n,LI ~ C2n + R2n, RLI ~ C2n + R2n, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bbio..bmor.b2n..bmor.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bbio..b2n.bbio..bmor.bio  = c(DI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12  ,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bbio..bmor.b2n.bbio..bmor.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bbio..bmor.b2n.bbio..bmor.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12, LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  
+
+  #variables and rates, direct effect of morphological rates on diversification, direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.b2n..d.bmor..d.bbio..bmor.bio  = c(DI ~ C2n + R2n, DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bmor..d.bbio.bmor.b2n..bmor.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n, LI ~ C2n + R2n, RLI ~ C2n + R2n, DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bmor..d.bbio..bmor.b2n..bmor.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bmor..d.bbio..b2n.bbio..bmor.bio  = c(DI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.bmor..d.bbio..bmor.b2n.bbio..bmor.bio = c(CU ~ C2n + R2n, RCU ~ C2n + R2n ,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),
+  d.b2n..d.bmor..d.bbio..bmor.b2n.bbio..bmor.bio = c(DI ~ C2n + R2n, CU ~ C2n + R2n, RCU ~ C2n + R2n,  LI ~ C2n + R2n, RLI ~ C2n + R2n, R2n ~ B1 + B4 + RB4 + B7 + B12, C2n ~ B1 + B4 + RB4 + B7 + B12, DI ~ CU + RCU + LI + RLI, DI ~ B1 + B4 + RB4 + B7 + B12, CU ~ B1 + B4 + RB4 + B7 + B12, RCU ~ B1 + B4 + RB4 + B7 + B12,  LI ~ B1 + B4 + RB4 + B7 + B12, RLI ~ B1 + B4 + RB4 + B7 + B12),    
+
   .common = c()
   
   )
