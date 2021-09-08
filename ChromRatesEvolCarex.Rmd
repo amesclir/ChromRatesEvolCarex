@@ -914,8 +914,9 @@ Let's get the matrices
 ```{r}
 
 branchmatrix <- read.csv(file= "branch_matrix.csv")
-branchmatrix
+branchmatrix <- branchmatrix[,2:5]
 colnames(branchmatrix) <- c("div", "spe", "ext", "r2n")
+branchmatrix
 
 branchmatrixsim <- matrix(0, 1508, 100)
 for (i in 1:100) branchmatrixsim[,i] <- read.csv(paste0("./branchmatrix/branch_matrix", paste(i), ".csv"))[,2]
@@ -924,7 +925,7 @@ branchmatrixdef <- cbind(branchmatrix,branchmatrixsim)
 dim(branchmatrixdef)
 
 results <- list()
-for (i in 5:105) results[[i-4]] <- summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,i]))
+for (i in 5:104) results[[i-4]] <- summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,i]))
 
 pvalues <- vector()
 for (i in 1:100) pvalues[i] <- results[[i]]$coefficients[2,4]
@@ -936,8 +937,12 @@ rsquareds
 
 sort(pvalues)
 summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,4]))$coefficients[2,4]
+hist(pvalues)
+abline(v=summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,4]))$coefficients[2,4])
 sort(rsquareds)
 summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,4]))$r.squared
+
+summary(lm(branchmatrixdef[,1] ~ branchmatrixdef[,4]))
 
 ```
 
