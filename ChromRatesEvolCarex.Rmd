@@ -966,5 +966,9 @@ load("./run1/.RData")
     div <- lambda.h - mu.s
     plot(states.seq, div, type = "l")
     
+    plot(states.seq, lambda.h, type = "l", ylim=(c(-2,8)), col = "blue", ylab = "Diversification rates", xlab = "Chromosome evolution rates")
+    lines(states.seq, mu.s, type = "l", col = "red")
+    lines(states.seq, div, type = "l", col = "purple")
+    
 ```
 
