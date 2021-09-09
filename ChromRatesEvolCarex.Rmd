@@ -162,8 +162,15 @@ plot(average_model_full, algorithm = 'mds', curvature = 0.1)
 
 
 
+result_noNZ <- phylo_path(models, data = my_data3, tree = my_tree, model = 'lambda', na.rm = TRUE)
 
+result_noNZ
+(snoNZ <- summary(result_noNZ))
+snoNZ
+plot(snoNZ)
+average_model_full_noNZ <- average(result_noNZ, avg_method = "full")
 
+average_model_full_noNZ
 ```
 
 
