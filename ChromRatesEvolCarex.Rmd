@@ -984,3 +984,113 @@ load("./run1/.RData")
     
 ```
 
+
+Analyses clade by clade
+
+```{r}
+
+
+
+VIGNEA
+tipstoremove <- setdiff(my_tree$tip.label, VIGNEA)
+my_tree_vignea <- drop.tip(my_tree, tipstoremove)
+my_data_vignea <- my_data2[my_data2$species %in% VIGNEA,]
+
+models_vignea <- define_model_set(
+  null = c(),
+  
+  #only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.r2n  = c(DI ~ R2n),
+  rmor.r2n = c(RCU ~ R2n,RLI ~ R2n),
+  d.r2n..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  
+  #only rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.r2n..d.rmor  = c(DI ~ R2n,DI ~ RCU + RLI),
+  d.rmor..rmor.r2n = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  
+    
+  .common = c()
+)
+
+
+
+
+result_vignea <- phylo_path(models_vignea, data = my_data_vignea, tree = my_tree_vignea, model = 'lambda', na.rm = TRUE)
+
+result_vignea
+
+(svignea <- summary(result_vignea))
+
+
+result_vignea_norates <- phylo_path(modelsnorates, data = my_data_vignea, tree = my_tree_vignea, model = 'lambda', na.rm = TRUE)
+(svigneanorates <- summary(result_vignea_norates))
+plot(svigneanorates)
+
+(best_model_vignea_norates <- best(result_vignea_norates))
+
+
+plot(best_model_vignea_norates)
+
+
+
+UNISPICATESCHOENOXIPHIUM
+tipstoremove <- setdiff(my_tree$tip.label, UNISPICATESCHOENOXIPHIUM)
+my_tree_us <- drop.tip(my_tree, tipstoremove)
+my_data_us <- my_data2[my_data2$species %in% UNISPICATESCHOENOXIPHIUM,]
+
+models_us <- define_model_set(
+  null = c(),
+  
+  #only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.r2n  = c(DI ~ R2n),
+  rmor.r2n = c(RCU ~ R2n,RLI ~ R2n),
+  d.r2n..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  
+  
+    
+  .common = c()
+)
+
+result_us <- phylo_path(models_us, data = my_data_us, tree = my_tree_us, model = 'lambda', na.rm = TRUE)
+
+#ERRORS!
+
+
+
+result_us_norates <- phylo_path(modelsnorates, data = my_data_us, tree = my_tree_us, model = 'lambda', na.rm = TRUE)
+
+#ERRORS!!!
+
+
+CAREX
+tipstoremove <- setdiff(my_tree$tip.label, CAREX)
+my_tree_carex <- drop.tip(my_tree, tipstoremove)
+my_data_carex <- my_data2[my_data2$species %in% CAREX,]
+my_data_carex$DI[my_data_carex$DI > 3] <- NA
+
+result_carex <- phylo_path(models_vignea, data = my_data_carex, tree = my_tree_carex, model = 'lambda', na.rm = TRUE)
+
+(scarex <- summary(result_carex))
+plot(scarex)
+
+(best_model_carex <- best(result_carex))
+
+
+plot(best_model_carex)
+
+
+
+
+result_carex_norates <- phylo_path(modelsnorates, data = my_data_carex, tree = my_tree_carex, model = 'lambda', na.rm = TRUE)
+(scarex_norates <- summary(result_carex_norates))
+plot(scarex_norates)
+
+(best_model_carex_norates <- best(result_carex_norates))
+
+
+plot(best_model_carex_norates)
+
+
+```
+
