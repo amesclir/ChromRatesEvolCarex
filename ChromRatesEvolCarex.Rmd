@@ -25,10 +25,15 @@ PPALateralInfl <- PPALateralInfl[,2:3]
 colnames(PPALateralInfl) <- c("species", "RLI")
 PPALateralInfl
 
-PPAdiv2n <- read.csv("PPAdiv2n.csv")
-PPAdiv2n <- PPAdiv2n[,2:6]
-colnames(PPAdiv2n) <- c("species", "SP", "EX", "DI", "R2n")
-PPAdiv2n
+PPAdiv <- read.csv("PPAdiv.csv")
+PPAdiv <- PPAdiv[,2:5]
+colnames(PPAdiv) <- c("species", "SP", "EX", "DI")
+PPAdiv
+
+PPA2n <- read.csv("PPA2n.csv")
+PPA2n <- PPA2n[,2:3]
+colnames(PPA2n) <- c("species", "R2n")
+PPA2n
 
 
 PPAmorph <- merge(PPAculm, PPALateralInfl, by.x = "species", by.y= "species", all = T)
@@ -41,6 +46,10 @@ dim(PPAmorph)
 PPAmorphbio <- merge(PPAmorph, PPAbio, by.x = "species", by.y= "species", all = T)
 dim(PPAmorphbio)
 
+PPAdiv2n <- merge(PPAdiv, PPA2n, by.x = "species", by.y= "species", all = T)
+dim(PPAdiv2n)
+
+
 PPAdata <- merge(PPAmorphbio, PPAdiv2n, by.x = "species", by.y= "species", all = T)
 dim(PPAdata)
 
@@ -52,7 +61,7 @@ Starting analyses with phylopath
 ```{r}
 
 library(ape)
-my_tree <- read.tree('Carex2n.tree') # For Newick format trees
+my_tree <- read.tree('Carex10Fossil.divTree.tre') # For Newick format trees
 
 my_data <- PPAdata
 rownames(my_data) <- my_data$species
@@ -207,7 +216,7 @@ summary(lm(PPAdata$R2n ~ PPAdata$C2n))
 
 
 library(ape)
-my_tree <- read.tree('Carex2n.tree') # For Newick format trees
+#my_tree <- read.tree('Carex2n.tree') # For Newick format trees
 
 my_data2 <- PPAdata
 rownames(my_data2) <- my_data2$species
