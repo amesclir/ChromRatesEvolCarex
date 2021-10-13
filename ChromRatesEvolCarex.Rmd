@@ -862,7 +862,133 @@ Analyses high rates vs. low rates
 
 ```{r}
 
+models4 <- define_model_set(
+  null = c(),
+  
+  #only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.r2n  = c(DI ~ R2n),
+  rmor.r2n = c(RCU ~ R2n,RLI ~ R2n),
+  d.r2n..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  d.r2n..r2n.rbio  = c(DI ~ R2n),
+  rmor.r2n.rbio = c(RCU ~ R2n ,  RLI ~ R2n),
+  d.r2n..rmor.r2n.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  
+  #only rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.r2n..d.rmor  = c(DI ~ R2n,DI ~ RCU + RLI),
+  d.rmor..rmor.r2n = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..r2n.rbio  = c(DI ~ R2n,DI ~ RCU + RLI),
+  d.rmor..rmor.r2n.rbio = c(RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..rmor.r2n.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  
+  #only rates, no direct effect of morphological rates on diversification, direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.r2n..d.rbio  = c(DI ~ R2n),
+  d.rbio..rmor.r2n = c(RCU ~ R2n, RLI ~ R2n),
+  d.r2n..d.rbio..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  d.r2n..d.rbio..r2n.rbio  = c(DI ~ R2n),
+  d.rbio..rmor.r2n.rbio = c(RCU ~ R2n ,  RLI ~ R2n),
+  d.r2n..d.rbio..rmor.r2n.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  
+  #only rates, direct effect of morphological rates on diversification, direct effect of bio on diversification, no direct effect of bio on morphological rates
+  d.r2n..d.rmor..d.rbio  = c(DI ~ R2n,DI ~ RCU + RLI),
+  d.rmor..d.rbio..rmor.r2n = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..d.rbio..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..d.rbio..r2n.rbio  = c(DI ~ R2n,DI ~ RCU + RLI),
+  d.rmor..d.rbio..rmor.r2n.rbio = c(RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..d.rbio..rmor.r2n.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  
+  #only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.r2n..rmor.rbio  = c(DI ~ R2n),
+  rmor.r2n..rmor.rbio = c(RCU ~ R2n,RLI ~ R2n),
+  d.r2n..rmor.r2n..rmor.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  d.r2n..r2n.rbio..rmor.rbio  = c(DI ~ R2n),
+  rmor.r2n.rbio..rmor.rbio = c(RCU ~ R2n ,  RLI ~ R2n),
+  d.r2n..rmor.r2n.rbio..rmor.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  
+  #only rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.r2n..d.rmor..rmor.rbio  = c(DI ~ R2n,DI ~ RCU + RLI),
+  d.rmor..rmor.r2n..rmor.rbio = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..rmor.r2n..rmor.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..r2n.rbio..rmor.rbio  = c(DI ~ R2n,DI ~ RCU + RLI),
+  d.rmor..rmor.r2n.rbio..rmor.rbio = c(RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..rmor.r2n.rbio..rmor.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  
+  #only rates, no direct effect of morphological rates on diversification, direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.r2n..d.rbio..rmor.rbio  = c(DI ~ R2n),
+  d.rbio..rmor.r2n..rmor.rbio = c(RCU ~ R2n,RLI ~ R2n),
+  d.r2n..d.rbio..rmor.r2n..rmor.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  d.r2n..d.rbio..r2n.rbio..rmor.rbio  = c(DI ~ R2n),
+  d.rbio..rmor.r2n.rbio..rmor.rbio = c(RCU ~ R2n ,  RLI ~ R2n),
+  d.r2n..d.rbio..rmor.r2n.rbio..rmor.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
+  
+  #only rates, direct effect of morphological rates on diversification, direct effect of bio on diversification, direct effect of bio on morphological rates
+  d.r2n..d.rmor..d.rbio..rmor.rbio  = c(DI ~ R2n,DI ~ RCU + RLI),
+  d.rmor..d.rbio..rmor.r2n..rmor.rbio = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..d.rbio..rmor.r2n..rmor.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..d.rbio..r2n.rbio..rmor.rbio  = c(DI ~ R2n,DI ~ RCU + RLI),
+  d.rmor..d.rbio..rmor.r2n.rbio..rmor.rbio = c(RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
+  d.r2n..d.rmor..d.rbio..rmor.r2n.rbio..rmor.rbio = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI), 
+  
+  .common = c()
+)
 
+
+result.lowrates <- phylo_path(models4, data = my_data2[my_data2$R2n < 20, ], tree = my_tree, model = 'lambda', na.rm = TRUE)
+
+result.lowrates
+
+(s.lowrates <- summary(result.lowrates))
+plot(s.lowrates)
+
+(best_model.lowrates <- best(result.lowrates))
+
+
+plot(best_model.lowrates)
+
+#Best model is the null model
+
+
+resultnorates.highrates <- phylo_path(modelsnorates, data = my_data2[my_data2$R2n > 20,], tree = my_tree, model = 'lambda', na.rm = TRUE)
+
+resultnorates.highrates
+
+(snorates.highrates <- summary(resultnorates.highrates))
+plot(snorates.highrates)
+
+(best_modelnorates.highrates <- best(resultnorates.highrates))
+
+
+plot(best_modelnorates.highrates)
+
+average_modelnorates.highrates <- average(resultnorates.highrates)
+average_modelnorates.highrates
+plot(average_modelnorates.highrates, algorithm = 'mds', curvature = 0.2) # increase the curvature to avoid overlapping edges
+
+average_model_fullnorates.highrates <- average(resultnorates.highrates, avg_method = "full")
+average_model_fullnorates.highrates
+plot(average_model_fullnorates.highrates, algorithm = 'mds', curvature = 0.2)
+
+
+
+resultnorates.lowrates <- phylo_path(modelsnorates, data = my_data2[my_data2$R2n < 20,], tree = my_tree, model = 'lambda', na.rm = TRUE)
+
+resultnorates.lowrates
+
+(snorates.lowrates <- summary(resultnorates.lowrates))
+plot(snorates.lowrates)
+
+(best_modelnorates.lowrates <- best(resultnorates.lowrates))
+
+
+plot(best_modelnorates.lowrates)
+
+average_modelnorates.lowrates <- average(resultnorates.lowrates)
+average_modelnorates.lowrates
+plot(average_modelnorates.lowrates, algorithm = 'mds', curvature = 0.2) # increase the curvature to avoid overlapping edges
+
+average_model_fullnorates.lowrates <- average(resultnorates.lowrates, avg_method = "full")
+average_model_fullnorates.lowrates
+plot(average_model_fullnorates.lowrates, algorithm = 'mds', curvature = 0.2)
 
 ```
 
