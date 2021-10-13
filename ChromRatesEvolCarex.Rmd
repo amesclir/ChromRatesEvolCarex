@@ -171,15 +171,7 @@ plot(average_model_full, algorithm = 'mds', curvature = 0.1)
 
 
 
-result_noNZ <- phylo_path(models, data = my_data3, tree = my_tree, model = 'lambda', na.rm = TRUE)
 
-result_noNZ
-(snoNZ <- summary(result_noNZ))
-snoNZ
-plot(snoNZ)
-average_model_full_noNZ <- average(result_noNZ, avg_method = "full")
-
-average_model_full_noNZ
 ```
 
 
@@ -324,46 +316,6 @@ average_model_fullnorates
 plot(average_model_fullnorates, algorithm = 'mds', curvature = 0.2)
 
 
-#We are going to repeat the process but excluding Spiros from NZ
-my_data3 <- PPAdata
-rownames(my_data3) <- my_data3$species
-my_data3$DI[my_data3$DI > 3.5] <- NA
-
-plot(my_data2$DI ~ my_data2$C2n)
-summary(lm(my_data2$DI ~ my_data2$C2n))
-plot(my_data3$DI ~ my_data3$C2n)
-summary(lm(my_data3$DI ~ my_data3$C2n))
-
-resultnorates2 <- phylo_path(modelsnorates, data = my_data3, tree = my_tree, model = 'lambda', na.rm = TRUE)
-
-resultnorates2
-
-(snorates2 <- summary(resultnorates2))
-plot(snorates2)
-
-(best_modelnorates2 <- best(resultnorates2))
-
-
-plot(best_modelnorates2)
-
-average_modelnorates2 <- average(resultnorates2)
-average_modelnorates2
-plot(average_modelnorates2, algorithm = 'mds', curvature = 0.2) # increase the curvature to avoid overlapping edges
-
-average_model_fullnorates2 <- average(resultnorates2, avg_method = "full")
-average_model_fullnorates2
-plot(average_model_fullnorates2, algorithm = 'mds', curvature = 0.2)
-
-library(caper)
-comparative.data1 <- comparative.data(my_tree, my_data2[,c(1,10,18)], species, vcv=TRUE, vcv.dim=3)
-comparative.data1
-mod1 <- pgls(DI ~ C2n, comparative.data1, lambda='ML')
-summary(mod1)
-
-comparative.data2 <- comparative.data(my_tree, my_data3[,c(1,10,18)], species, vcv=TRUE, vcv.dim=3)
-comparative.data2
-mod2 <- pgls(DI ~ C2n, comparative.data2, lambda='ML')
-summary(mod2)
 
 ```
 
@@ -906,6 +858,15 @@ plot(average_model_full3, algorithm = 'mds', curvature = 0.2)
 ```
 
 
+Analyses high rates vs. low rates
+
+```{r}
+
+
+
+```
+
+
 
 Let's create shuffle trees for the permutation analyses
 
@@ -993,113 +954,4 @@ load("./run1/.RData")
     
 ```
 
-
-Analyses clade by clade
-
-```{r}
-
-
-
-VIGNEA
-tipstoremove <- setdiff(my_tree$tip.label, VIGNEA)
-my_tree_vignea <- drop.tip(my_tree, tipstoremove)
-my_data_vignea <- my_data2[my_data2$species %in% VIGNEA,]
-
-models_vignea <- define_model_set(
-  null = c(),
-  
-  #only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
-  d.r2n  = c(DI ~ R2n),
-  rmor.r2n = c(RCU ~ R2n,RLI ~ R2n),
-  d.r2n..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
-  
-  #only rates, direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
-  d.r2n..d.rmor  = c(DI ~ R2n,DI ~ RCU + RLI),
-  d.rmor..rmor.r2n = c(RCU ~ R2n,RLI ~ R2n,DI ~ RCU + RLI),
-  d.r2n..d.rmor..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n,DI ~ RCU + RLI),
-  
-    
-  .common = c()
-)
-
-
-
-
-result_vignea <- phylo_path(models_vignea, data = my_data_vignea, tree = my_tree_vignea, model = 'lambda', na.rm = TRUE)
-
-result_vignea
-
-(svignea <- summary(result_vignea))
-
-
-result_vignea_norates <- phylo_path(modelsnorates, data = my_data_vignea, tree = my_tree_vignea, model = 'lambda', na.rm = TRUE)
-(svigneanorates <- summary(result_vignea_norates))
-plot(svigneanorates)
-
-(best_model_vignea_norates <- best(result_vignea_norates))
-
-
-plot(best_model_vignea_norates)
-
-
-
-UNISPICATESCHOENOXIPHIUM
-tipstoremove <- setdiff(my_tree$tip.label, UNISPICATESCHOENOXIPHIUM)
-my_tree_us <- drop.tip(my_tree, tipstoremove)
-my_data_us <- my_data2[my_data2$species %in% UNISPICATESCHOENOXIPHIUM,]
-
-models_us <- define_model_set(
-  null = c(),
-  
-  #only rates, no direct effect of morphological rates on diversification, no direct effect of bio on diversification, no direct effect of bio on morphological rates
-  d.r2n  = c(DI ~ R2n),
-  rmor.r2n = c(RCU ~ R2n,RLI ~ R2n),
-  d.r2n..rmor.r2n = c(DI ~ R2n, RCU ~ R2n ,  RLI ~ R2n),
-  
-  
-    
-  .common = c()
-)
-
-result_us <- phylo_path(models_us, data = my_data_us, tree = my_tree_us, model = 'lambda', na.rm = TRUE)
-
-#ERRORS!
-
-
-
-result_us_norates <- phylo_path(modelsnorates, data = my_data_us, tree = my_tree_us, model = 'lambda', na.rm = TRUE)
-
-#ERRORS!!!
-
-
-CAREX
-tipstoremove <- setdiff(my_tree$tip.label, CAREX)
-my_tree_carex <- drop.tip(my_tree, tipstoremove)
-my_data_carex <- my_data2[my_data2$species %in% CAREX,]
-my_data_carex$DI[my_data_carex$DI > 3] <- NA
-
-result_carex <- phylo_path(models_vignea, data = my_data_carex, tree = my_tree_carex, model = 'lambda', na.rm = TRUE)
-
-(scarex <- summary(result_carex))
-plot(scarex)
-
-(best_model_carex <- best(result_carex))
-
-
-plot(best_model_carex)
-
-
-
-
-result_carex_norates <- phylo_path(modelsnorates, data = my_data_carex, tree = my_tree_carex, model = 'lambda', na.rm = TRUE)
-(scarex_norates <- summary(result_carex_norates))
-plot(scarex_norates)
-
-(best_model_carex_norates <- best(result_carex_norates))
-
-
-plot(best_model_carex_norates)
-
-
-```
 
