@@ -1,0 +1,8 @@
+#$ -S /bin/bash
+#$ -N bamm
+#$ -wd /home/aescudero/bamm/bammchromratesevol/bamm39
+#$ -o bamm39.salida
+#$ -e bamm39.err
+#$ -q diaria_simple
+/home/software/bamm-2.5.0/bamm -c Bamm.txt
+

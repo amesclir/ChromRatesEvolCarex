@@ -1,0 +1,8 @@
+#$ -S /bin/bash
+#$ -N Rbamm29
+#$ -wd /home/aescudero/bamm/bammchromratesevol/bamm29
+#$ -o Rbamm29.salida
+#$ -e Rbamm29.err
+#$ -q diaria_simple
+module load R-4.0.3-Bioconductor
+R CMD BATCH Script29.R

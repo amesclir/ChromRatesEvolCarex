@@ -1,0 +1,8 @@
+#$ -S /bin/bash
+#$ -N Rbamm62
+#$ -wd /home/aescudero/bamm/bammchromratesevol/bamm62
+#$ -o Rbamm62.salida
+#$ -e Rbamm62.err
+#$ -q diaria_simple
+module load R-4.0.3-Bioconductor
+R CMD BATCH Script62.R

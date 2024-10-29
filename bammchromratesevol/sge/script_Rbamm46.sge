@@ -1,0 +1,8 @@
+#$ -S /bin/bash
+#$ -N Rbamm46
+#$ -wd /home/aescudero/bamm/bammchromratesevol/bamm46
+#$ -o Rbamm46.salida
+#$ -e Rbamm46.err
+#$ -q diaria_simple
+module load R-4.0.3-Bioconductor
+R CMD BATCH Script46.R

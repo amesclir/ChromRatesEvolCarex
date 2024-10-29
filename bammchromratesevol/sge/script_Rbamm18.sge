@@ -1,0 +1,8 @@
+#$ -S /bin/bash
+#$ -N Rbamm18
+#$ -wd /home/aescudero/bamm/bammchromratesevol/bamm18
+#$ -o Rbamm18.salida
+#$ -e Rbamm18.err
+#$ -q diaria_simple
+module load R-4.0.3-Bioconductor
+R CMD BATCH Script18.R

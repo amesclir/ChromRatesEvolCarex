@@ -1,0 +1,8 @@
+#$ -S /bin/bash
+#$ -N Rbamm23
+#$ -wd /home/aescudero/bamm/bammchromratesevol/bamm23
+#$ -o Rbamm23.salida
+#$ -e Rbamm23.err
+#$ -q diaria_simple
+module load R-4.0.3-Bioconductor
+R CMD BATCH Script23.R
